@@ -3,10 +3,11 @@ import unittest
 
 from flask.cli import FlaskGroup
 
-from project import app, db
+from project import create_app, db
+from project.api.models import User
 
-
-cli = FlaskGroup(app)
+app = create_app()
+cli = FlaskGroup(create_app=create_app)
 
 
 @cli.command('recreate_db')
@@ -18,7 +19,10 @@ def recreate_db():
 
 @cli.command()
 def test():
-    """Runs the tests without code coverage"""
+    """
+        Runs the tests without code coverage
+    """
+    
     tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
